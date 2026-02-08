@@ -21,7 +21,7 @@ public class HoopScript : MonoBehaviour
             heartPowerUp.SetActive(false);
         }
 
-        moveSpeed = DifficultyScript.hoopSpeed;
+        moveSpeed = MenuManagerScript.hoopSpeed;
         logic = GameObject.FindGameObjectWithTag("Logic").GetComponent<LogicManagerScript>();
     }
 

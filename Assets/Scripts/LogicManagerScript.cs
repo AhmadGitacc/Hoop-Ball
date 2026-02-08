@@ -1,3 +1,6 @@
+using System.IO;
+using System.Linq;
+using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -10,19 +13,27 @@ public class LogicManagerScript : MonoBehaviour
     public bool isAlive = true;
     public GameObject gameOverScreen;
     public HeartDisplay heartDisplay;
+    public TextMeshProUGUI leaderboardText;
+
+    private string savePath;
+    private LeaderboardList leaderboardData = new LeaderboardList();
+    private bool isGameOver = false;
 
     void Start()
     {
-        health = DifficultyScript.startHealth;
+        health = MenuManagerScript.startHealth;
         heartDisplay = GameObject.FindGameObjectWithTag("Logic").GetComponent<HeartDisplay>();
         heartDisplay.UpdateHealth(health);
+        savePath = Application.persistentDataPath + "/leaderboard.json";
+        LoadLeaderboard();
     }
 
     void Update()
     {
-        if (health == 0)
+        if (health == 0 && !isGameOver)
         {
             gameOver();
+            isGameOver = true;
         }
     }
 
@@ -56,6 +67,33 @@ public class LogicManagerScript : MonoBehaviour
     {
         gameOverScreen.SetActive(true);
         isAlive = false;
+        string nameToSave = MenuManagerScript.playerName;
+
+        leaderboardData.entries.Add(new HighScoreEntry { playerName = nameToSave, score = score });
+        leaderboardData.entries = leaderboardData.entries.OrderByDescending(e => e.score).Take(5).ToList();
+
+        string json = JsonUtility.ToJson(leaderboardData);
+        File.WriteAllText(savePath, json);
+
+        UpdateLeaderboardUI();
+    }
+
+    void UpdateLeaderboardUI()
+    {
+        leaderboardText.text = "TOP 5 SCORES:\n";
+        foreach (var entry in leaderboardData.entries)
+        {
+            leaderboardText.text += $"{entry.playerName}: {entry.score}\n";
+        }
+    }
+
+    void LoadLeaderboard()
+    {
+        if (File.Exists(savePath))
+        {
+            string json = File.ReadAllText(savePath);
+            leaderboardData = JsonUtility.FromJson<LeaderboardList>(json);
+        }
     }
 
     public void MainMenu()

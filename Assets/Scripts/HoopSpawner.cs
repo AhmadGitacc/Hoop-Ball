@@ -9,7 +9,7 @@ public class HoopSpawner : MonoBehaviour
 
     void Start()
     {
-        spawnRate = DifficultyScript.spawnRate;
+        spawnRate = MenuManagerScript.spawnRate;
         SpawnHoop();
     }
 

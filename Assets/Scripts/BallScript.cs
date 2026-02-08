@@ -15,10 +15,10 @@ public class BallScript : MonoBehaviour
 
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Space) && logic.isAlive)
+        if (Input.GetKeyDown(KeyCode.Space) || Input.GetMouseButtonDown(0) && logic.isAlive)
         {
             ballRigidBody.linearVelocity = Vector2.up * jumpStrength;
-            transform.rotation = Quaternion.Euler(0, 0, 20f);
+            transform.rotation = Quaternion.Euler(0, 0, 40f);
         }
 
         transform.rotation = Quaternion.Lerp(transform.rotation, Quaternion.identity, Time.deltaTime * 5f);

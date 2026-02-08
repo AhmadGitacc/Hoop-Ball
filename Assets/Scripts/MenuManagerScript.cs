@@ -1,13 +1,21 @@
+using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class DifficultyScript : MonoBehaviour
+public class MenuManagerScript : MonoBehaviour
 {
     public static float hoopSpeed = 1;
     public static int spawnRate = 3;
     public static int startHealth = 3;
+    public TMP_InputField playerNameInput;
+    public static string playerName = "Guest";
+
     void StartGame()
     {
+        if (!string.IsNullOrWhiteSpace(playerNameInput.text))
+        {
+            playerName = playerNameInput.text;
+        }
         SceneManager.LoadScene("SampleScene");
     }
 
